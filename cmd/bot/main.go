@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/repository/boltDB"
 	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/telegram"
+	"github.com/boltdb/bolt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 )
@@ -14,7 +16,15 @@ func main() {
 
 	bot.Debug = true
 
-	telegramBot := telegram.NewBot(bot)
+	db, err := bolt.Open("db/bot.db", 0600, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	userDataRepository := boltDB.NewUserDataRepository(db)
+
+	telegramBot := telegram.NewBot(bot, userDataRepository)
 	if err := telegramBot.Start(); err != nil {
 		log.Fatal(err)
 	}
