@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/repository"
 	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/repository/boltDB"
 	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/telegram"
 	"github.com/boltdb/bolt"
@@ -16,8 +17,7 @@ func main() {
 
 	bot.Debug = true
 
-	db, err := bolt.Open("db/bot.db", 0600, nil)
-
+	db, err := initDB()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,4 +28,23 @@ func main() {
 	if err := telegramBot.Start(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func initDB() (*bolt.DB, error) {
+	db, err := bolt.Open("db/bot.db", 0600, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte(repository.UserData))
+		if err != nil {
+			return err
+		}
+		return err
+	}); err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
