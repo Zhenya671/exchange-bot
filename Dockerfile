@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine3.15 AS builder
+FROM golang:1.19-alpine3.15
 
 COPY . /github.com/Zhenya671/telegram-bot-exchangeRates
 WORKDIR /github.com/Zhenya671/telegram-bot-exchangeRates
