@@ -6,3 +6,9 @@ build:
 
 run: build
 	./.bin/bot
+
+build-image:
+	docker build -t telegram-bot .
+
+start-container:
+	docker run --name exchange-rates-bot -p 80:80 --env-file .env telegram-bot
