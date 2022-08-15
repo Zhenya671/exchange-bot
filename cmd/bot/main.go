@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/config"
 	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/repository"
 	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/repository/boltDB"
 	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/telegram"
@@ -10,14 +11,21 @@ import (
 )
 
 func main() {
-	bot, err := tgbotapi.NewBotAPI("5558699531:AAHIaGPR4utxz4yz5WYtqUO5NWEQnHFuBVQ")
+	cnf, err := config.Init()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println(cnf)
+
+	bot, err := tgbotapi.NewBotAPI(cnf.TelegramToken)
 	if err != nil {
 		log.Panic(err)
 	}
 
 	bot.Debug = true
 
-	db, err := initDB()
+	db, err := initDB(cnf)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,8 +38,8 @@ func main() {
 	}
 }
 
-func initDB() (*bolt.DB, error) {
-	db, err := bolt.Open("db/bot.db", 0600, nil)
+func initDB(cnf *config.Config) (*bolt.DB, error) {
+	db, err := bolt.Open(cnf.DBPath, 0600, nil)
 	if err != nil {
 		return nil, err
 	}
