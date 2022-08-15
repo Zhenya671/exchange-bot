@@ -37,12 +37,8 @@ jobs:
     needs: build_and_push
 
     steps:
-      - run: |
-          TEMP=$(mktemp)
-          echo "${{ secrets.SSHKEY }}" > $TEMP
-          ssh -o 'StrictHostKeyChecking no' -i $TEMP myuser@mysite.com 'bash -s' < scripts/deploy.sh
       - name: Deploy to Digital Ocean droplet via SSH action
-        uses: appleboy/ssh-action@v0.1.3
+        uses: appleboy/scp-action@main
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
