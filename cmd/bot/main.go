@@ -20,7 +20,7 @@ func main() {
 
 	bot, err := tgbotapi.NewBotAPI(cnf.TelegramToken)
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
 
 	bot.Debug = true
