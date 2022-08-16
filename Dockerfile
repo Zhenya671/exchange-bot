@@ -15,7 +15,7 @@ COPY --from=0 /github.com/Zhenya671/telegram-bot-exchangeRates/config config/
 
 RUN ls -a
 
-COPY --from=0 /github.com/Zhenya671/telegram-bot-exchangeRates/.env .
+#COPY --from=0 /github.com/Zhenya671/telegram-bot-exchangeRates/.env .
 
 EXPOSE 80
 
