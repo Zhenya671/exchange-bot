@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -11,10 +10,6 @@ type Config struct {
 }
 
 func Init() (*Config, error) {
-	err := godotenv.Load(".env")
-	if err != nil {
-		return nil, err
-	}
 	viper.AddConfigPath("config")
 	viper.SetConfigName("main")
 
