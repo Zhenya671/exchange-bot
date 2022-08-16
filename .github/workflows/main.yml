@@ -9,6 +9,7 @@ env:
   REGISTRY: "registry.digitalocean.com/sandbox-bot"
   IMAGE_NAME: "telegram-bot"
   CONTAINER_NAME: "exchange-rates-bot"
+  ENV_FILE_PATH: "./sandbox-bot/.env"
 
 jobs:
   build_and_push:
@@ -17,12 +18,6 @@ jobs:
     steps:
       - name: Checkout main
         uses: actions/checkout@v2
-
-      - name: 'Create env file'
-        run: |
-          touch .env
-          echo TOKEN=${{ secrets.TELEGRAM_TOKEN }} >> .env
-          cat .env  
 
       - name: Build container image
         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
@@ -64,7 +59,7 @@ jobs:
             export TOKEN=${{ secrets.TELEGRAM_TOKEN }}
 
             # Run a new container from a new image
-            docker run -e TOKEN -d \
+            docker run --env-file ${{ ENV_FILE_PATH }} -d \
             --restart always \
             --publish 80:80 \
             --name $(echo $CONTAINER_NAME) \
