@@ -9,7 +9,6 @@ env:
   REGISTRY: "registry.digitalocean.com/sandbox-bot"
   IMAGE_NAME: "telegram-bot"
   CONTAINER_NAME: "exchange-rates-bot"
-  ENV_FILE_PATH: "./sandbox-bot/.env"
 
 jobs:
   build_and_push:
@@ -59,7 +58,7 @@ jobs:
             export TOKEN=${{ secrets.TELEGRAM_TOKEN }}
 
             # Run a new container from a new image
-            docker run --env-file ${{ ENV_FILE_PATH }} -d \
+            docker run -e TOKEN -d \
             --restart always \
             --publish 80:80 \
             --name $(echo $CONTAINER_NAME) \
