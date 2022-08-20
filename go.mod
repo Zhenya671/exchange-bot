@@ -10,6 +10,7 @@ require (
 )
 
 require (
+	github.com/Zhenya671/go-bnb-sdk v0.0.0-20220819151020-d0415584e7c2 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
