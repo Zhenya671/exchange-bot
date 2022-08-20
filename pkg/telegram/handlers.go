@@ -9,6 +9,12 @@ import (
 )
 
 const (
+	usdID  = 431
+	euroID = 451
+	gbpID  = 429
+)
+
+const (
 	commandUSD = "usd"
 	commandEUR = "eur"
 	commandGBP = "gbp"
@@ -32,39 +38,45 @@ func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 	case commandUSD:
 		return b.handleCommandUSD(message)
 	case commandEUR:
-		return b.handleCommandRetrieve(message)
+		return b.handleCommandEURO(message)
 	case commandGBP:
-		return b.handleCommandRetrieve(message)
+		return b.handleCommandGBP(message)
 	default:
 		return b.handleUnknownCommand(message)
 	}
 }
 
 func (b *Bot) handleCommandUSD(message *tgbotapi.Message) error {
-	currency, er := bnb.GetCurrentCurrency(431)
+	currency, er := bnb.GetCurrentCurrency(usdID)
 	if er != nil {
 		return er
 	}
-
-	for key, value := range currency {
-		fmt.Printf("key: %s, value: %s", key, value)
-	}
-
-	msg := tgbotapi.NewMessage(message.Chat.ID, "command start")
+	response := prepareResponse(currency)
+	msg := prepareMessage(message.Chat.ID, response)
 
 	_, err := b.bot.Send(msg)
 	return err
 }
-
-func (b *Bot) handleCommandRetrieve(message *tgbotapi.Message) error {
-	collectMsg, err := b.dataUsers.Get(message.Chat.ID, repository.UserData)
-	if err != nil {
-		return err
+func (b *Bot) handleCommandEURO(message *tgbotapi.Message) error {
+	currency, er := bnb.GetCurrentCurrency(euroID)
+	if er != nil {
+		return er
 	}
+	response := prepareResponse(currency)
+	msg := prepareMessage(message.Chat.ID, response)
 
-	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("\n%s", collectMsg))
+	_, err := b.bot.Send(msg)
+	return err
+}
+func (b *Bot) handleCommandGBP(message *tgbotapi.Message) error {
+	currency, er := bnb.GetCurrentCurrency(gbpID)
+	if er != nil {
+		return er
+	}
+	response := prepareResponse(currency)
+	msg := prepareMessage(message.Chat.ID, response)
 
-	_, err = b.bot.Send(msg)
+	_, err := b.bot.Send(msg)
 	return err
 }
 
@@ -73,4 +85,25 @@ func (b *Bot) handleUnknownCommand(message *tgbotapi.Message) error {
 
 	_, err := b.bot.Send(msg)
 	return err
+}
+
+func prepareResponse(currency map[string]interface{}) []interface{} {
+	var response []interface{}
+	for key, value := range currency {
+		if key == "Cur_Abbreviation" {
+			response = append(response, value)
+		}
+		if key == "Cur_Name" {
+			response = append(response, value)
+		}
+		if key == "Cur_OfficialRate" {
+			response = append(response, fmt.Sprintf("%v", value))
+		}
+	}
+
+	return response
+}
+
+func prepareMessage(chatID int64, response []interface{}) tgbotapi.MessageConfig {
+	return tgbotapi.NewMessage(chatID, fmt.Sprintf("%s - %s %v", response[0], response[1], response[2]))
 }
