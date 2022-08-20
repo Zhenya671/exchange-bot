@@ -2,14 +2,16 @@ package telegram
 
 import (
 	"fmt"
+	bnb "github.com/Zhenya671/go-bnb-sdk"
 	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/repository"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 )
 
 const (
-	commandStart    = "start"
-	commandRetrieve = "retrieve"
+	commandUSD = "usd"
+	commandEUR = "eur"
+	commandGBP = "gbp"
 )
 
 func (b *Bot) handleMessage(message *tgbotapi.Message) error {
@@ -27,16 +29,27 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) error {
 
 func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 	switch message.Command() {
-	case commandStart:
-		return b.handleCommandStart(message)
-	case commandRetrieve:
+	case commandUSD:
+		return b.handleCommandUSD(message)
+	case commandEUR:
+		return b.handleCommandRetrieve(message)
+	case commandGBP:
 		return b.handleCommandRetrieve(message)
 	default:
 		return b.handleUnknownCommand(message)
 	}
 }
 
-func (b *Bot) handleCommandStart(message *tgbotapi.Message) error {
+func (b *Bot) handleCommandUSD(message *tgbotapi.Message) error {
+	currency, er := bnb.GetCurrentCurrency(431)
+	if er != nil {
+		return er
+	}
+
+	for key, value := range currency {
+		fmt.Printf("key: %s, value: %s", key, value)
+	}
+
 	msg := tgbotapi.NewMessage(message.Chat.ID, "command start")
 
 	_, err := b.bot.Send(msg)

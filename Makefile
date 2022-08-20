@@ -20,5 +20,8 @@ continue:
 stop:
 	docker stop `docker ps -q -l`
 
+remove:
+	docker rm `docker ps -a -q -l`
+
 start-container-test:
 	docker run --name exchange-rates-bot --env TOKEN=5558699531:AAG7HFzLoxQf7QQhC-VsGj_yFZCf7o9XW9I telegram-bot

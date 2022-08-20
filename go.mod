@@ -3,14 +3,13 @@ module github.com/Zhenya671/telegram-bot-exchangeRates
 go 1.18
 
 require (
+	github.com/Zhenya671/go-bnb-sdk v0.0.0-20220819151020-d0415584e7c2
 	github.com/boltdb/bolt v1.3.1
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
-	github.com/joho/godotenv v1.4.0
 	github.com/spf13/viper v1.12.0
 )
 
 require (
-	github.com/Zhenya671/go-bnb-sdk v0.0.0-20220819151020-d0415584e7c2 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
