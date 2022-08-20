@@ -3,6 +3,7 @@ module github.com/Zhenya671/telegram-bot-exchangeRates
 go 1.18
 
 require (
+	github.com/Zhenya671/go-bnb-sdk v0.0.0-20220820205716-09ec56fa8837
 	github.com/boltdb/bolt v1.3.1
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/joho/godotenv v1.4.0
@@ -25,5 +26,5 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
