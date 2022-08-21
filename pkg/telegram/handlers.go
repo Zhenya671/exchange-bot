@@ -6,6 +6,7 @@ import (
 	"github.com/Zhenya671/telegram-bot-exchangeRates/pkg/repository"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
+	"math/rand"
 )
 
 const (
@@ -15,15 +16,21 @@ const (
 )
 
 const (
-	commandUSD = "usd"
-	commandEUR = "eur"
-	commandGBP = "gbp"
+	commandStart = "start"
+	commandUSD   = "usd"
+	commandEUR   = "eur"
+	commandGBP   = "gbp"
 )
 
 func (b *Bot) handleMessage(message *tgbotapi.Message) error {
 	log.Printf("[%s] %s", message.From.UserName, message.Text)
 	chatID := message.Chat.ID
+	intRand := rand.Int63n(2)
 	msg := tgbotapi.NewMessage(chatID, message.Text)
+
+	if intRand == 1 {
+		msg = tgbotapi.NewMessage(chatID, "Today is winner day. Try your luck in smth bud")
+	}
 
 	if err := b.dataUsers.Save(chatID, message.From.FirstName, repository.UserData); err != nil {
 		return err
@@ -35,6 +42,8 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) error {
 
 func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 	switch message.Command() {
+	case commandStart:
+		return b.handleCommandStart(message)
 	case commandUSD:
 		return b.handleCommandUSD(message)
 	case commandEUR:
@@ -44,6 +53,13 @@ func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 	default:
 		return b.handleUnknownCommand(message)
 	}
+}
+
+func (b *Bot) handleCommandStart(message *tgbotapi.Message) error {
+	msg := tgbotapi.NewMessage(message.Chat.ID, "Choose one of three command and get current rate..")
+
+	_, err := b.bot.Send(msg)
+	return err
 }
 
 func (b *Bot) handleCommandUSD(message *tgbotapi.Message) error {
@@ -57,6 +73,7 @@ func (b *Bot) handleCommandUSD(message *tgbotapi.Message) error {
 	_, err := b.bot.Send(msg)
 	return err
 }
+
 func (b *Bot) handleCommandEURO(message *tgbotapi.Message) error {
 	currency, er := bnb.GetCurrentCurrency(euroID)
 	if er != nil {
@@ -68,6 +85,7 @@ func (b *Bot) handleCommandEURO(message *tgbotapi.Message) error {
 	_, err := b.bot.Send(msg)
 	return err
 }
+
 func (b *Bot) handleCommandGBP(message *tgbotapi.Message) error {
 	currency, er := bnb.GetCurrentCurrency(gbpID)
 	if er != nil {
