@@ -1,4 +1,4 @@
-# exchange-bot
-
-
-https://t.me/CurrenciesRatesBot
+## ExchangeRatesCurrencies bot
+~~~
+It was created to more convinient and quicker checking out exchange rates  
+~~~
