@@ -1,4 +1,4 @@
 ## ExchangeRatesCurrencies bot
 ~~~
-It was created to more convinient and quicker checking out exchange rates  
+It's created for more convinient and quicker checking out exchange rates  
 ~~~
